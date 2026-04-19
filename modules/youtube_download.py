@@ -16,7 +16,7 @@ def download_youtube_audio(url):
         return None
     out_dir = tempfile.mkdtemp()
     out_tmpl = os.path.join(out_dir, "audio.%(ext)s")
-    opts = {
+    opts = {"cookiefile": "youtube_cookies.txt",
         "format": "bestaudio[ext=m4a]/bestaudio/best",
         "outtmpl": out_tmpl,
         "quiet": True,
