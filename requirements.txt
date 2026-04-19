@@ -3,5 +3,5 @@ reportlab
 moviepy
 imageio-ffmpeg
 faster-whisper
-yt-dlp
+yt-dlp==2025.01.15
 gunicorn
