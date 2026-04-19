@@ -15,11 +15,13 @@ def download_youtube_audio(url):
     out_tmpl = os.path.join(out_dir, "audio.%(ext)s")
 
     opts = {
-        "format": "bestaudio/best",
+    # Specific format-ai thavirtthu best audio-vai edukkavum
+        "format": "bestaudio/best", 
         "outtmpl": out_tmpl,
         "quiet": True,
         "no_warnings": True,
-        "cookiefile": COOKIE_PATH,  # Cookies payanpadutha
+        "cookiefile": COOKIE_PATH,
+        # Audio-vai MP3-aaga maatra indha section miguvum mukkiyam
         "postprocessors": [{
             "key": "FFmpegExtractAudio",
             "preferredcodec": "mp3",
