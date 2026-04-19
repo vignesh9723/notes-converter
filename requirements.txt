@@ -1,0 +1,6 @@
+flask
+reportlab
+moviepy
+imageio-ffmpeg
+faster-whisper
+yt-dlp
