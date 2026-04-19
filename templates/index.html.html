@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Content Generator</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Georgia, serif; background: #f5f5f5; padding: 40px 20px; line-height: 1.6; color: #333; }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 { font-size: 1.5rem; margin-bottom: 30px; font-weight: 600; }
+        .form-section { background: #fff; padding: 24px; margin-bottom: 20px; border: 1px solid #ddd; }
+        .form-section h2 { font-size: 1rem; margin-bottom: 16px; font-weight: 600; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid #ccc; }
+        input[type="submit"] { padding: 10px 24px; background: #333; color: #fff; border: none; cursor: pointer; font-size: 0.9rem; }
+        input[type="submit"]:hover { background: #555; }
+        .content-box { background: #fff; padding: 24px; margin: 20px 0; border: 1px solid #ddd; }
+        .content-box p { margin-bottom: 1em; text-align: justify; white-space: pre-wrap; }
+        .content-box p:last-child { margin-bottom: 0; }
+        .download-btn { display: inline-block; margin-top: 16px; padding: 10px 24px; background: #333; color: #fff; text-decoration: none; font-size: 0.9rem; }
+        .download-btn:hover { background: #555; color: #fff; }
+        .checkbox-label { display: inline; font-weight: normal; }
+        .hint { display: block; font-size: 0.85rem; color: #666; margin-top: 4px; }
+        #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.85); z-index: 100; justify-content: center; align-items: center; flex-direction: column; }
+        #loading-overlay.visible { display: flex; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #ddd; border-top-color: #333; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .content-box ul { margin: 0 0 1em; padding-left: 1.5em; }
+        .content-box ul li { margin-bottom: 0.5em; text-align: left; }
+        .gen-time { font-size: 0.9rem; color: #666; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top: 12px;">Generating...</p>
+    </div>
+    <div class="container">
+        <h1>Lecture Content Generator</h1>
+        <form method="post" enctype="multipart/form-data" action="/" id="lecture-form">
+            <div class="form-section">
+                <h2>YouTube link</h2>
+                <label for="youtube_url">Paste YouTube URL</label>
+                <input type="text" name="youtube_url" id="youtube_url" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            <div class="form-section">
+                <h2>Or upload MP4 video</h2>
+                <label for="mp4_file">Select MP4 file</label>
+                <input type="file" name="mp4_file" id="mp4_file" accept=".mp4">
+            </div>
+            <div class="form-section">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="simplify_content" value="on"> Simplify as bullet points
+                </label>
+                <span class="hint">Convert transcript into short bullet points for easier reading.</span>
+            </div>
+            <input type="submit" value="Extract and Transcribe" id="submit-btn">
+        </form>
+        <script>
+            document.getElementById("lecture-form").addEventListener("submit", function() {
+                document.getElementById("loading-overlay").classList.add("visible");
+                document.getElementById("submit-btn").disabled = true;
+            });
+        </script>
+        {% if error %}
+        <div class="content-box" style="color: #c00;">{{ error }}</div>
+        {% endif %}
+        {% if content %}
+        <div class="content-box">
+            {% if generation_time is defined and generation_time is not none %}
+            <p class="gen-time">Generated in {{ generation_time }} seconds.</p>
+            {% endif %}
+            {% if content_as_bullets %}
+            <ul>
+                {% for line in content.split('\n') %}
+                {% if line.strip() %}
+                <li>{{ line.strip() }}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>{{ content }}</p>
+            {% endif %}
+            <a href="/download" class="download-btn">Download PDF</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
