@@ -4,3 +4,4 @@ moviepy
 imageio-ffmpeg
 faster-whisper
 yt-dlp
+gunicorn
